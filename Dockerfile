@@ -10,9 +10,6 @@ RUN apt-get update && \
         nginx
 
 copy start.sh /sbin/start.sh
-copy fail2ban.conf /etc/fail2ban/fail2ban.conf
-copy nginx.conf /etc/fail2ban/jail.d/nginx.conf
-copy ssh.conf /etc/fail2ban/jail.d/ssh.conf
         
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \

@@ -1,16 +1,18 @@
 #!/bin/bash
 set -e
 
-confDir=/config
-nginxConf=$confDir/nginx.conf
+nginxConfDir=/config/nginx
+nginxConf=$nginxConfDir/nginx.conf
+fail2banConfDir=/config/fail2ban
 
-if [ ! -f $nginxConf ]; then
+if [ ! -d $nginxConfDir ]; then
     # Config file missing
-    cp -rn /etc/nginx/* $confDir
+    mkdir $nginxConfDir
+    cp -rn /etc/nginx/* $nginxConfDir
     sed -i -e "s#/etc/nginx/#$confDir/#g" $nginxConf
-    sed -i -e "s#/var/www/#/www/#g" $confDir/sites-available/default
-    rm -f $confDir/sites-enabled/*
-    ln -s ../sites-available/default $confDir/sites-enabled/default
+    sed -i -e "s#/var/www/#/www/#g" $nginxConfDir/sites-available/default
+    rm -f $nginxConfDir/sites-enabled/*
+    ln -s ../sites-available/default $nginxConfDir/sites-enabled/default
     
     # Create html folder if missing
     # Only doing if conf was also missing as user conf may not need html folder
@@ -53,7 +55,21 @@ EOF
     fi
 fi
 
+if [ ! -d $fail2banConfDir ]; then
+    mkdir $fail2banConfDir
+    cp -rn /etc/fail2ban/* $fail2banConfDir
+    sed -i -e "s#logtarget = .*#logtarget = STDERR/#g" $fail2banConfDir/fail2ban.conf
+    cat <<EOF > $fail2banConfDir/jail.d/ssh.conf
+[ssh]
+enabled = false
+EOF
+    cat <<EOF > $fail2banConfDir/jail.d/nginx.conf
+[nginx-http-auth]
+enabled = true
+EOF
+fi
+
 # Start services
 service dnsmasq start
-service fail2ban force-start
+fail2ban -c /config/fail2ban/ start
 nginx -c $nginxConf -g "daemon off;"
