@@ -9,7 +9,7 @@ if [ ! -d $nginxConfDir ]; then
     # Config file missing
     mkdir $nginxConfDir
     cp -rn /etc/nginx/* $nginxConfDir
-    sed -i -e "s#/etc/nginx/#$confDir/#g" $nginxConf
+    sed -i -e "s#/etc/nginx/#$nginxConfDir/#g" $nginxConf
     sed -i -e "s#/var/www/#/www/#g" $nginxConfDir/sites-available/default
     rm -f $nginxConfDir/sites-enabled/*
     ln -s ../sites-available/default $nginxConfDir/sites-enabled/default
@@ -69,7 +69,11 @@ enabled = true
 EOF
 fi
 
+if [ ! -d /var/run/fail2ban ]; then
+    mkdir /var/run/fail2ban
+fi
+
 # Start services
 service dnsmasq start
-fail2ban -c /config/fail2ban/ start
+fail2ban-client -x -c /config/fail2ban/ start
 nginx -c $nginxConf -g "daemon off;"
