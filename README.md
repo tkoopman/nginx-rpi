@@ -15,8 +15,8 @@ docker create \
     --name nginx \
     -p 80:80 \
     -p 443:443 \
-    -v /path/to/config/dir:/config:ro \
-    -v /path/to/www/dir:/www:ro \
+    -v /path/to/config/dir:/config \
+    -v /path/to/www/dir:/www \
     --cap-add=NET_ADMIN \
     tkoopman/nginx-rpi
 ```
