@@ -4,6 +4,7 @@ Docker image of nginx with fail2ban &amp; dnsmasq for Raspberry Pi
 - [Introduction](#introduction)
 - [How to Run](#howtorun)
 - [Configuration](#config)
+- [Tags](#tags)
 - [Links](#links)
 
 # Introduction
@@ -31,6 +32,13 @@ Config directory is broken into two subdirectories.
 * /config/fail2ban
 
 If directories are missing they will be created and populated with default configurations for this build.
+
+# Tags
+Currently have two active tags.
+## tkoopman/nginx-rpi:latest
+This is running the standard version of nginx for jessie
+## tkoopman/nginx-rpi:backport
+This is running the newer version of nginx from jessie-backports
 
 # Links
 Docker Hub: https://hub.docker.com/r/tkoopman/nginx-rpi/
