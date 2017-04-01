@@ -1,6 +1,14 @@
 #!/bin/bash
 set -e
 
+if [ ! "$TIMEZONE" = "" ]; then
+	echo ${TIMEZONE} >/etc/timezone && \
+	dpkg-reconfigure -f noninteractive tzdata
+	echo "Container timezone set to: $TIMEZONE"
+else
+	echo "Container timezone not modified"
+fi
+
 nginxConfDir=/config/nginx
 nginxConf=$nginxConfDir/nginx.conf
 fail2banConfDir=/config/fail2ban
@@ -58,7 +66,7 @@ fi
 if [ ! -d $fail2banConfDir ]; then
     mkdir $fail2banConfDir
     cp -rn /etc/fail2ban/* $fail2banConfDir
-    sed -i -e "s#logtarget = .*#logtarget = STDERR/#g" $fail2banConfDir/fail2ban.conf
+    sed -i -e "s#logtarget = .*#logtarget = /var/log/fail2ban.log#g" $fail2banConfDir/fail2ban.conf
     cat <<EOF > $fail2banConfDir/jail.d/ssh.conf
 [ssh]
 enabled = false
@@ -72,6 +80,11 @@ fi
 if [ ! -d /var/run/fail2ban ]; then
     mkdir /var/run/fail2ban
 fi
+
+# Make sure log files exist
+touch /log/access.log
+touch /log/error.log
+touch /log/fail2ban.log
 
 # Start services
 service dnsmasq start

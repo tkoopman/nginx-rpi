@@ -11,13 +11,17 @@ Docker image for nginx web server / reverse proxy. Contains fail2ban to help det
 
 # How to Run
 ```shell
-docker create \
+docker run \
     --name nginx \
     -p 80:80 \
     -p 443:443 \
     -v /path/to/config/dir:/config \
     -v /path/to/www/dir:/www \
+    -v /path/to/log/dir:/log \
+    --env "TIMEZONE=Australia/Brisbane" \
     --cap-add=NET_ADMIN \
+    --restart=always \
+    --detach \
     tkoopman/nginx-rpi
 ```
 
