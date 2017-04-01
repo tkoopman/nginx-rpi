@@ -18,7 +18,7 @@ docker run \
     -v /path/to/config/dir:/config \
     -v /path/to/www/dir:/www \
     -v /path/to/log/dir:/log \
-    --env "TIMEZONE=Australia/Brisbane" \
+    --env "TIMEZONE=$(cat /etc/timezone)" \
     --cap-add=NET_ADMIN \
     --restart=always \
     --detach \
