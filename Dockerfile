@@ -2,11 +2,15 @@ FROM resin/rpi-raspbian:jessie
 
 LABEL maintainer "T Koopman"
 
-RUN apt-get update && \
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010 && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8B48AD6246925553 && \
+    echo 'deb http://httpredir.debian.org/debian jessie-backports main contrib non-free' > /etc/apt/sources.list.d/jessie-backports.list && \
+    apt-get update && \
     apt-get install -y \
         iptables \
         dnsmasq \
-        fail2ban \
+        fail2ban  && \
+    apt-get install -y -t jessie-backports \
         nginx
 
 copy start.sh /sbin/start.sh
