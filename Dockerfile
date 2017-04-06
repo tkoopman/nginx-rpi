@@ -27,7 +27,3 @@ RUN ln -sf /log/access.log /var/log/nginx/access.log && \
 EXPOSE 80 443
 
 CMD /sbin/start.sh
-
-# Clean up APT when done. 
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
