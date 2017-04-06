@@ -11,7 +11,9 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010 &&
         dnsmasq \
         fail2ban  && \
     apt-get install -y -t jessie-backports \
-        nginx
+        nginx && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 copy start.sh /sbin/start.sh
 
@@ -29,7 +31,3 @@ RUN ln -sf /log/access.log /var/log/nginx/access.log && \
 EXPOSE 80 443
 
 CMD /sbin/start.sh
-
-# Clean up APT when done. 
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
