@@ -7,7 +7,9 @@ RUN apt-get update && \
         iptables \
         dnsmasq \
         fail2ban \
-        nginx
+        nginx && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 copy start.sh /sbin/start.sh
 
